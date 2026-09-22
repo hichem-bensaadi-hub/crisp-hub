@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cRISp — Mots de passe</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      color: #f4f4f4;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .topbar {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .back {
+      color: #71717a;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .back:hover { color: #FFC30C; }
+
+    h1 {
+      font-size: 1.3rem;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      color: #52525b;
+      font-size: 0.82rem;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 760px;
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #52525b;
+      padding: 14px 16px;
+      border-bottom: 1px solid #27272a;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #202023;
+      vertical-align: middle;
+      font-size: 0.86rem;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    .service {
+      font-weight: 700;
+      color: #f4f4f4;
+      white-space: nowrap;
+    }
+
+    .hint {
+      color: #52525b;
+      font-size: 0.74rem;
+      margin-top: 2px;
+    }
+
+    .value-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .value {
+      background: #0a0a0a;
+      border: 1px solid #27272a;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      color: #FFC30C;
+      min-width: 90px;
+      display: inline-block;
+    }
+
+    .reveal, .copy {
+      appearance: none;
+      background: #232326;
+      border: 1px solid #2e2e32;
+      border-radius: 8px;
+      color: #d4d4d8;
+      font-size: 0.76rem;
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .reveal:hover, .copy:hover {
+      background: #2c2c31;
+      color: #FFC30C;
+    }
+
+    .copy.copied {
+      color: #22c55e;
+    }
+
+    .no-auth-row td { color: #52525b; }
+    .no-auth {
+      font-size: 0.78rem;
+      color: #52525b;
+      font-style: italic;
+    }
+
+    @media (max-width: 640px) {
+      table, thead, tbody, tr, td { display: block; }
+      thead { display: none; }
+      tbody tr {
+        padding: 14px 16px;
+        border-bottom: 1px solid #27272a;
+      }
+      tbody td {
+        padding: 4px 0;
+        border: none;
+      }
+      .value-cell { flex-wrap: wrap; margin-top: 6px; }
+    }
+
+    footer {
+      margin-top: 32px;
+      color: #3f3f46;
+      font-size: 0.72rem;
+      text-align: center;
+      max-width: 560px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a class="back" href="/">← Retour au hub</a>
+    <a class="back" href="/logout">Se déconnecter</a>
+  </div>
+
+  <h1>🔑 Mots de passe</h1>
+  <div class="subtitle">Identifiants des différents espaces admin/staff</div>
+
+  <div class="wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Champ</th>
+          <th>Valeur</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!--CREDENTIALS-->
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    Ces valeurs sont lues depuis une variable d'environnement Railway (HUB_CREDENTIALS) côté serveur — elles ne sont jamais stockées dans le code. Pour ajouter/modifier une entrée, mettre à jour cette variable sur le service crisp-hub.
+  </footer>
+
+  <script>
+    document.querySelectorAll('.reveal').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var code = btn.parentElement.querySelector('.value');
+        var isHidden = code.textContent.indexOf('•') !== -1;
+        code.textContent = isHidden ? code.dataset.value : '••••••••';
+        btn.textContent = isHidden ? '🙈' : '👁';
+      });
+    });
+
+    document.querySelectorAll('.copy').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var code = btn.parentElement.querySelector('.value');
+        navigator.clipboard.writeText(code.dataset.value).then(function () {
+          btn.textContent = 'Copié !';
+          btn.classList.add('copied');
+          setTimeout(function () {
+            btn.textContent = 'Copier';
+            btn.classList.remove('copied');
+          }, 1500);
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
