@@ -150,9 +150,9 @@ function renderCredentialsTable() {
 
   const noAuthNote = `
     <tr class="no-auth-row">
-      <td class="service">Crisp Kiosk / Crisp Compta / Crisp Food Cost</td>
-      <td>Aucune protection</td>
-      <td class="value-cell"><span class="no-auth">pas de mot de passe configuré côté code</span></td>
+      <td class="service">Crisp Kiosk</td>
+      <td>/, /staff, /kitchen, /encaissement</td>
+      <td class="value-cell"><span class="no-auth">volontairement sans mot de passe (usage en libre-service / sur place)</span></td>
     </tr>`;
 
   return rows + noAuthNote;
